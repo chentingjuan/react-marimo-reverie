@@ -2,7 +2,7 @@
   "name": "react-marimo-reverie",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://chentingjuan.github.io/eden-storybook",
+  "homepage": "http://chentingjuan.github.io/react-marimo-reverie",
   "_homepage": "./",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
