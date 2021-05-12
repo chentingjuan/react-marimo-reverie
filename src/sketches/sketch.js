@@ -1,22 +1,18 @@
 
-import { vert, frag } from './tab2';
+// import { vert, frag } from './tab2';
 
 export default function sketch(p5) {
-  const { windowWidth, windowHeight, WEBGL } = p5;
+  const { windowWidth, windowHeight } = p5;
   let colors = "a2ca3d-81bc3f-5fad41-3e954b-2d8950-1c7c54-48af7e".split("-").map(a=>"#"+a);
   let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5;
   let user;
   let bubbles = [], sounds = [];
   const chewingTime = 300;
-  const userColor = '#219EBC', nutritionColor = '#6B705C';
-  // let _text;
-  let sh;
+  const userColor = '#219EBC';
+  // const nutritionColor = '#6B705C';
+  const nutritionColor = '#fff';
   let props;
-
-  // preload = () => {
-  //   // let a = loadSound("divided.mp3");
-  //   // sounds.push(a)
-  // }
+  let pixelWidth = 6; 
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
     props = theProps;
@@ -26,26 +22,18 @@ export default function sketch(p5) {
   };
 
   p5.setup = () => {
-    p5.createCanvas(windowWidth, windowHeight, WEBGL);
+    p5.createCanvas(windowWidth, windowHeight);
     
     numOfMarimos = Math.floor(windowWidth*windowHeight/90000);
     numOfNutritions = Math.floor(windowWidth*windowHeight/90000);
-    let dep = p5.max(windowWidth,windowHeight);
-    p5.ortho(-windowWidth / 2, windowWidth / 2, -windowHeight / 2, windowHeight / 2, -dep*2 , dep*2.5);
     p5.noStroke();
-    
-    //shader
-    sh = p5.createShader(vert,frag);
-    p5.shader(sh);
-    sh.setUniform("u_resolution", [windowWidth,windowHeight]);
-    sh.setUniform("u_lightDir", [1,1,-1]);
     
     marimos=[];
     for(let i=0; i<numOfMarimos; i++){
       marimos.push(new Marimo({
-        position: p5.createVector(p5.random(-windowWidth/2, windowWidth/2), p5.random(-windowHeight/2, windowHeight/2)),
+        position: getRandomPosition(),
         vector: p5.constructor.Vector.random2D(),
-        radius: p5.random(50, 80),
+        diameter: p5.int(p5.random(10, 24)) * pixelWidth,
         color: colors[Math.floor(p5.random(colors.length))],
       }));
     }
@@ -53,7 +41,7 @@ export default function sketch(p5) {
     nutritions=[];
     for(let i=0; i<numOfNutritions; i++){
       nutritions.push(new Nutrition({
-        position: p5.createVector(p5.random(-windowWidth/2, windowWidth/2), p5.random(-windowHeight/2, windowHeight/2)),
+        position: getRandomPosition(),
       }))
     }
     
@@ -62,9 +50,10 @@ export default function sketch(p5) {
 
   p5.draw = () => {
     p5.background('#DEF0F7');
-    // console.log(windowWidth, windowHeight)
+    // p5.background('black');
+
     if (p5.frameCount % 50 === 0) {
-      let position = p5.createVector(p5.random(-windowWidth/2, windowWidth/2), p5.random(-windowHeight/2, windowHeight/2));
+      let position = getRandomPosition();
       nutritions.push(new Nutrition({
         position
       }))
@@ -82,18 +71,21 @@ export default function sketch(p5) {
       
       // hit the nutritions
       nutritions.filter(n => !n.eaten).forEach(n => {
-        if(m.position.dist(n.position)<(m.radius+n.radius)/1) {
-          m.radius+=1;
+        if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
+          // m.diameter+=pixelWidth;
+          m.toSize(m.diameter + pixelWidth);
           n.eaten=true;
         }
       })
       
       // hit user
-      if(user.radius>1) {
-        if(!m.chewing && m.position.dist(user.position)<(m.radius+user.radius)/1) {
-          m.radius+=1;
+      if(user.diameter>pixelWidth*3) {
+        if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+          // m.diameter+=pixelWidth;
+          m.toSize(m.diameter + pixelWidth);
           m.chewing = true;
-          user.radius-=2;
+          // user.diameter-=pixelWidth;
+          user.toSize(user.diameter - pixelWidth);
         }
       } else {
         // console.log("Game over!")
@@ -102,28 +94,29 @@ export default function sketch(p5) {
       }
       
       // divide
-      if(m.radius>80) {
+      if(m.diameter>pixelWidth*28) {
         // sounds[0].play();
-        m.radius=50;
+        // m.diameter=pixelWidth*15;
+        m.toSize(pixelWidth*15);
         m.position.sub(10, 0);
         marimos.push(new Marimo({
           position: m.position.copy().add(20, 0),
           vector: p5.createVector(0, 0),
-          radius: 50,
+          diameter: pixelWidth*15,
           color: m.color,
         }));
       }
       
       // add bubbles
-      if (p5.random()<0.02){
-        let offset = p5.random(-m.radius, m.radius);
-        bubbles.push({
-          p: m.position.copy().add(offset),
-          v: p5.createVector(0, p5.random(-0.5,-5)),
-          r: p5.random(1,6),
-          opacity: p5.random(0.1, 500)
-        })
-      }
+      // if (p5.random()<0.02){
+      //   let offset = p5.random(-m.radius, m.radius);
+      //   bubbles.push({
+      //     p: m.position.copy().add(offset),
+      //     v: p5.createVector(0, p5.random(-0.5,-5)),
+      //     r: p5.random(1,6),
+      //     opacity: p5.random(0.1, 500)
+      //   })
+      // }
     })
     
     // nutritions...
@@ -131,18 +124,18 @@ export default function sketch(p5) {
       n.draw()
       
       // hit user
-      if(user.position.dist(n.position)<(user.radius+n.radius)/1) {
-        user.radius+=2;
+      if(user.position.dist(n.position)<(user.diameter+n.diameter)/2) {
+        user.toSize(user.diameter + pixelWidth);
         n.eaten=true;
       }
     });
     
     // bubbles...
-    bubbles.forEach(b=>{
-      drawSphere(p5.color(255), p5.createVector(b.p.x + p5.noise(b.p.y/20)*b.r*2, b.p.y, 100), b.r);
-        b.p.y+=b.v.y;
-    })
-    bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
+    // bubbles.forEach(b=>{
+    //   drawPixelCircle(p5.color(255), p5.createVector(b.p.x + p5.noise(b.p.y/20)*b.r*2, b.p.y, 100), b.r);
+    //     b.p.y+=b.v.y;
+    // })
+    // bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
     
     user.update();
     user.draw();
@@ -154,32 +147,34 @@ export default function sketch(p5) {
     constructor(params) {
       this.position = params.position;
       this.vector = params.vector;
-      this.radius = params.radius;
+      this.diameter = params.diameter;
       this.color = params.color;
       this.chewing = false;
       this.chewingTimer = chewingTime;
       // this.colliding=false;
+
+      this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
-      drawSphere(this.chewing?userColor:this.color, this.position, this.radius);
+      drawPixelCircle(this.matrix, this.position);
     }
     update() {
       this.position.add(this.vector)
       if(p5.frameCount%900===0) this.vector.mult(0.9)
       
       // hit the wall
-      if(p5.abs(this.position.x) > windowWidth/2) this.vector.x = -1.3*this.vector.x;
-      if(p5.abs(this.position.y) > windowHeight/2) this.vector.y = -1.3*this.vector.y;
+      if(this.position.x <= 0 || this.position.x > windowWidth) this.vector.x = -1.3*this.vector.x;
+      if(this.position.y <= 0 || this.position.y > windowHeight) this.vector.y = -1.3*this.vector.y;
       
       // hit the marimos
       marimos.forEach(m => {
         if (this!==m){
-          if (this.position.dist(m.position)<(this.radius+m.radius)/1) {
+          if (this.position.dist(m.position)<(this.diameter+m.diameter)/2) {
             //add sounds
             // 
           }
 
-          if (this.position.dist(m.position)<(this.radius+m.radius)/1.2) {
+          if (this.position.dist(m.position)<(this.diameter+m.diameter)/2.1) {
             let delta = m.position.copy().sub(this.position)
             this.vector.sub(delta.mult(0.2).setMag(1))
             m.vector.add(delta.mult(0.2).setMag(1))
@@ -193,56 +188,161 @@ export default function sketch(p5) {
       if(this.vector.y > maxVector) this.vector.y = maxVector;
       if(this.vector.y < -1*maxVector) this.vector.y = -1*maxVector;
     }
+    toSize(diameter) {
+      this.diameter=diameter;
+      this.matrix = generateMatrix(this.color, this.diameter);
+    }
   }
 
   class Nutrition {
     constructor(params) {
       this.position = params.position;
-      this.radius = 5;
+      this.diameter = 4;
+      this.color = nutritionColor;
       this.eaten=false;
+
+      this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
-      drawSphere(nutritionColor, this.position, this.radius);
-    }
-    updatePosition() {
-      this.position.set(p5.random(-windowWidth/2, windowWidth/2), p5.random(-windowHeight/2, windowHeight/2));
+      drawPixelCircle(this.matrix, this.position);
+      // drawPixelCircle(nutritionColor, this.position, this.diameter);
     }
   }
 
   class User {
     constructor(params) {
-      this.position = p5.createVector(-windowWidth/2, -windowHeight/2);
-      this.radius = 9;
+      this.position = p5.createVector(0, 0);
+      this.diameter = pixelWidth*3;
       this.eatenable = true;
+      this.color = userColor;
+      
+      this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
-      drawSphere(userColor, this.position, this.radius);
+      // drawPixelCircle(userColor, this.position, this.diameter);
+      drawPixelCircle(this.matrix, this.position);
     }
     update() {
       const easing = 0.01;
       
-      let targetX = p5.mouseX - windowWidth/2;
+      let targetX = p5.mouseX;
       let dx = targetX - this.position.x;
       this.position.x += dx * easing;
 
-      let targetY = p5.mouseY - windowHeight/2;
+      let targetY = p5.mouseY;
       let dy = targetY - this.position.y;
       this.position.y += dy * easing;
     }
+    toSize(diameter) {
+      this.diameter=diameter;
+      this.matrix = generateMatrix(this.color, this.diameter);
+    }
   }
 
-  function setCol(shader,uniformName,colStr) {
-    let col = p5.color(colStr);
-    let colArray = col._array;
-    colArray.pop();
-    shader.setUniform(uniformName,colArray);
+  const getRandomPosition = () => p5.createVector(p5.random(0, windowWidth), p5.random(0, windowHeight));
+
+  const distance = ( x, y ) => Math.sqrt((Math.pow(y, 2)) + Math.pow(x, 2));
+  const filled = ( x, y, radius ) => distance(x, y) <= radius;
+	const	fatfilled = ( x, y, radius ) => {
+    return filled(x, y, radius) && !(
+      filled(x + 1, y, radius) &&
+      filled(x - 1, y, radius) &&
+      filled(x, y + 1, radius) &&
+      filled(x, y - 1, radius) &&
+      filled(x + 1, y + 1, radius) &&
+      filled(x + 1, y - 1, radius) &&
+      filled(x - 1, y - 1, radius) &&
+      filled(x - 1, y + 1, radius)
+    );
+  };
+
+  const generateMatrix = (color, diameter) => {
+    const radius = Math.ceil(diameter/pixelWidth)/2;
+    const borderColor = p5.lerpColor(p5.color('black'), p5.color(color), 0.6);
+    const color_1 = p5.lerpColor(p5.color('black'), p5.color(color), 0.66);
+    const color_2 = p5.lerpColor(p5.color('black'), p5.color(color), 0.9);
+    const color_3 = color;
+    const color_4 = p5.lerpColor(p5.color('white'), p5.color(color), 0.9);
+    const color_5 = p5.lerpColor(p5.color('white'), p5.color(color), 0.8);
+    // const shadowColor = p5.lerpColor(p5.color('black'), p5.color(color), 0.8);
+    // const lightColor = p5.lerpColor(p5.color('white'), p5.color(color), 0.8);
+
+    let maxblocks;
+    if( (radius * 2) % 2 == 0 ) {
+      maxblocks = Math.ceil(radius - .5) * 2 + 1;
+    } else {
+      maxblocks = Math.ceil(radius) * 2;
+    }
+
+    let matrix = [];
+    // for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
+    //   matrix[y] = [];
+    //   for( let x = -maxblocks / 2 + 1; x <= maxblocks / 2 - 1; x++ ) {
+    let i = 0, j = 0;
+    for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
+      matrix[i] = [];
+      j=0;
+      for( let x = -maxblocks / 2 + 1; x <= maxblocks / 2 - 1; x++ ) {                
+        
+        // let pixelColor = false;
+        if(filled(x, y, radius)) {
+          if(fatfilled(x, y, radius) && !(fatfilled(x + (x > 0 ? 1 : -1), y, radius) && fatfilled(x, y + (y > 0 ? 1 : -1), radius))) {
+            // pixelColor = borderColor;
+            matrix[i].push(borderColor)
+          } else if(filled(x+2, y+2, 1 )) {
+            matrix[i].push(color_5);
+          } else if(filled(x+2, y+2, radius-7 )) {
+            p5.random()<0.3 ? matrix[i].push(color_5) : matrix[i].push(color_4);
+          } else if(filled(x+2, y+2, radius-6 )) {
+            // pixelColor = lightColor;
+            matrix[i].push(color_4)
+          } else if(filled(x+2, y+2, radius-4 )) {
+          // //   pixelColor = p5.random()<0.03 ? shadowColor : color;
+            p5.random()<0.3 ? matrix[i].push(color_4) : matrix[i].push(color_3);
+          } else if(filled(x+1, y+1, radius-3 )) {
+            // pixelColor = color;
+            matrix[i].push(color_3)
+          } else if(filled(x+1, y+1, radius-2 )) {
+            p5.random()<0.3 ? matrix[i].push(color_3) : matrix[i].push(color_2);
+          } else if(filled(x+1, y+1, radius-1 )) {
+            matrix[i].push(color_2)
+          } else {
+            // pixelColor = shadowColor;
+            matrix[i].push(color_1)
+          }
+        } else {
+          matrix[i].push(null)
+        }
+
+        // if(pixelColor) {
+        //   p5.fill(pixelColor);
+        //   p5.rect(xp, yp, pixelWidth);
+        // }
+        j++;
+      }
+      i++;
+    }
+    // console.log(matrix)
+    return matrix;
   }
 
-  function drawSphere(color, position, radius) {
+  function drawPixelCircle(matrix, position) {
     p5.push();
-      setCol(sh,"u_col", color);
-      p5.translate(position);
-      p5.sphere(radius);
+      // p5.circle(position.x, position.y, diameter);
+      p5.translate(position.x, position.y);
+      
+      for( let y = 0; y < matrix.length; y++ ) {
+        for( let x = 0; x < matrix.length; x++ ) {
+          if(matrix[y][x]) {
+            const xp = (x - matrix.length/2)*pixelWidth;
+            const yp = (y - matrix.length/2)*pixelWidth;
+
+            p5.fill(matrix[y][x]);
+            p5.rect(xp, yp, pixelWidth);
+          }
+        }
+      }
+
     p5.pop();
   }
 }
