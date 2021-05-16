@@ -6,11 +6,17 @@
   text-align: center;
 }
 
+#loading-wrapper {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
 .data-box {
   position: fixed;
   left: 0;
   top: 0;
   padding: 4px;
   font-size: 14px;
-  color: white;
+  /* color: white; */
 }

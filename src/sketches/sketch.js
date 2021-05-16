@@ -7,12 +7,13 @@ export default function sketch(p5) {
   let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5;
   let user;
   let bubbles = [], sounds = [];
-  const chewingTime = 300;
+  const chewingTime = 300, eateningTime = 20;
   const userColor = '#219EBC';
   // const nutritionColor = '#6B705C';
   const nutritionColor = '#fff';
   let props;
-  let pixelWidth = 6; 
+  let pixelWidth = 6;
+  let timer = 0;
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
     props = theProps;
@@ -23,10 +24,11 @@ export default function sketch(p5) {
 
   p5.setup = () => {
     p5.createCanvas(windowWidth, windowHeight);
-    
+    p5.noStroke();
     numOfMarimos = Math.floor(windowWidth*windowHeight/90000);
     numOfNutritions = Math.floor(windowWidth*windowHeight/90000);
-    p5.noStroke();
+
+    setInterval(() => props.setTimer(props.timer+1), 1000);
     
     marimos=[];
     for(let i=0; i<numOfMarimos; i++){
@@ -49,7 +51,8 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-    p5.background('#DEF0F7');
+    if(user.eateningTimer%10 < 5) p5.background('#DEF0F7');
+    else p5.background('black');
     // p5.background('black');
 
     if (p5.frameCount % 50 === 0) {
@@ -79,11 +82,12 @@ export default function sketch(p5) {
       })
       
       // hit user
-      if(user.diameter>pixelWidth*3) {
+      if(user.diameter>pixelWidth*1) {
         if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
           // m.diameter+=pixelWidth;
           m.toSize(m.diameter + pixelWidth);
           m.chewing = true;
+          user.eatening = true;
           // user.diameter-=pixelWidth;
           user.toSize(user.diameter - pixelWidth);
         }
@@ -98,7 +102,7 @@ export default function sketch(p5) {
         // sounds[0].play();
         // m.diameter=pixelWidth*15;
         m.toSize(pixelWidth*15);
-        m.position.sub(10, 0);
+        // m.position.sub(10, 0);
         marimos.push(new Marimo({
           position: m.position.copy().add(20, 0),
           vector: p5.createVector(0, 0),
@@ -139,6 +143,11 @@ export default function sketch(p5) {
     
     user.update();
     user.draw();
+    if(user.eatening) user.eateningTimer--;
+    if(user.eateningTimer<=0) {
+      user.eatening=false;
+      user.eateningTimer = eateningTime;
+    }
 
     props.setNumOfMarimos(marimos.length)
   }
@@ -151,6 +160,7 @@ export default function sketch(p5) {
       this.color = params.color;
       this.chewing = false;
       this.chewingTimer = chewingTime;
+      this.dividing = false;
       // this.colliding=false;
 
       this.matrix = generateMatrix(this.color, this.diameter);
@@ -213,8 +223,10 @@ export default function sketch(p5) {
     constructor(params) {
       this.position = p5.createVector(0, 0);
       this.diameter = pixelWidth*3;
-      this.eatenable = true;
+      // this.eatenable = true;
       this.color = userColor;
+      this.eatening = false;
+      this.eateningTimer = eateningTime;
       
       this.matrix = generateMatrix(this.color, this.diameter);
     }
