@@ -4,13 +4,10 @@ import './css/main.scss';
 import Loading from "./components/Loading.jsx";
 
 import routerConfig from "./route.conf.js";
-import TransitionMatchHOC from "./components/TransitionMatchHOC";
+import TransitionMatchHOC from "./components/MatchHOC";
 import ContextProvider from "./hooks/useContextSPATransitionLock.js";
 
 function App() {
-
-  // console.log(routerConfig)
-  
   return (
     <>
       <Loading />

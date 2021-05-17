@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { gsap, Power4 } from "gsap";
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "../sketches/sketch";
+import { navigate } from "@reach/router";
 
 const GamePage = () => {
   const [numOfMarimos, setNumOfMarimos] = useState(0);
@@ -16,7 +17,8 @@ const GamePage = () => {
       sketch=sketch 
       setNumOfMarimos=setNumOfMarimos
       timer=timer
-      setTimer=setTimer)
+      setTimer=setTimer
+      isGameOver=()=>navigate('/the-end'))
   `;
 };
 

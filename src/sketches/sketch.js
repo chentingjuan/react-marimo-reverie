@@ -92,6 +92,7 @@ export default function sketch(p5) {
           user.toSize(user.diameter - pixelWidth);
         }
       } else {
+        props.isGameOver();
         // console.log("Game over!")
         // alert("Game Over!");
         // setup();

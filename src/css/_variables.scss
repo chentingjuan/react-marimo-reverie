@@ -1,0 +1,138 @@
+$main-color: rgba(181, 68, 52, 1), rgba(74, 74, 74, 1), rgba(155, 155, 155, 1), rgba(242, 242, 242, 1);
+$main-color-opacity: rgba(181, 68, 52, .3);
+
+$bg-color: rgba(93, 188, 185, 1), rgba(97, 178, 186, 1), rgba(51, 132, 143, 1);
+
+$white: rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.85),rgba(255, 255, 255, 0.5),rgba(255, 255, 255, 0.25),rgba(255, 255, 255, 0.15);
+$black: rgba(0, 0, 0, 1),rgba(0, 0, 0, .9),rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.25),rgba(0, 0, 0, 0.15),rgba(0, 0, 0, 0.05);
+
+// Page Img Setting
+$img_size_base: '100% / 7';
+$img_position: '100% / 12';
+$con_gap_base: '100% / 8';
+$con_gap_base_s: '100% / 16';
+
+
+:root {
+   // --content_space_a: .5rem;
+   // --content_space_b: 1rem;
+   // --content_space_c: 2rem;
+   // --content_space_d: 4rem;
+   --base: 1rem;
+   --column: calc(var(--max_width) / 8);
+   --row: calc(var(--max_width) / 12);
+   --gap: calc(var(--base) * 2.25);
+   --container_gap: var(--gap);
+   --max_width: calc(100vw - var(--container_gap));
+
+   --con_spa_s: calc(100vw / 128); // 9 16
+   --con_spa_m: calc(100vw / 64); // 9 8
+   --con_spa_l: calc(100vw / 32); // 9 4
+   --con_spa_xl: calc(100vw / 16); // 9 2
+   --con_spa_xxl: calc(100vw / 8); // 9 2
+   --header_height: calc(var(--base) * 4);
+   // --area_space_b: 4rem;
+   // --area_space_c: 8rem;
+   // --top_space: 4rem;
+   // --horizontal_space: 1.5rem;
+   --line_height: 1.75;
+   --f_s_s: calc(var(--base) * 0.875);
+   --f_s: var(--base);
+   --f_w_3: 300;
+   --f_w_4: 400;
+   --f_w_5: 500;
+   --f_w_6: 600;
+   --f_w_7: 700;
+   --f_w_8: 800;
+   --f_f: 'Press Start 2P', 'Noto Serif TC', sans-serif;
+   --f_f_s: 'Luckiest Guy', 'Noto Serif TC', sans-serif;
+   --col_bg: #{rgba(230, 230, 230, 1)};
+   // --col_pri: #{rgba(150, 105, 35, 1)};
+   // --col_pri_opacity_heavy: #{rgba(150, 105, 35, 0.8)};
+   // --col_pri_opacity: #{rgba(150, 105, 35, .5)};
+
+   --col_pri: #{rgb(31, 31, 31)};
+   --col_pri_opacity_heavy: #{rgba(60, 60, 60, .8)};
+   --col_pri_opacity: #{rgba(120, 120, 120, 1)};
+
+   --col_sec: #{rgba(115, 110, 100, 1)};
+   --col_white: #{rgba(255, 255, 255, 1)};
+   --col_white_opacity: #{rgba(255, 255, 255, .6)};
+   --col_gray_lighten: #{rgba(231, 231, 231, 1)};
+   --col_gray: #{rgb(190, 190, 190)};
+   --col_gray_darken: #{#31353a};
+   // --col_gray_darken: #{rgba(51, 51, 51, 1)};
+   --col_black: #{rgba(0, 0, 0, 1)};
+   --col_black_opacity: #{rgba(0, 0, 0, .5)};
+   // --col_topic_a: #{#51B9C2};
+   // --col_topic_b: #{#FD624D};
+   // --col_topic_c: #{#D2E3A6};
+   // --trt_timing: cubic-bezier(.4, 0, .2, 1);
+   --trt_timing: cubic-bezier(.5, 0, .3, 1);
+   // --trt_timing_home: cubic-bezier(.5, 0, .25, 1.25);
+   --trt_timing_2: cubic-bezier(0, 1, .5, 1);
+}
+
+// @include breakpoint($MS) {
+//    :root {
+//       --column: calc(100vw / 24);
+//       --row: calc(100vw / 18);
+//       // --f_s_s: calc(14px + .2vw);
+//       // --f_s: calc(16px + .2vw);
+//       // --horizontal_space: 12.5vw;
+//    }
+// }
+
+
+// @include breakpoint($M) {
+//    :root {
+//       // --top_space: 5rem;
+//       // --horizontal_space: 10vw;
+//       --header_height: var(--row);
+//       --content_width: calc(100vw - var(--con_spa_xxl) * 2);
+//       --content_column: calc(var(--content_width) / 6); 
+//    }
+// }
+
+// @include breakpoint($LX) {
+//    :root {
+//       // --base: 18px;
+//       // --content_space_a: calc(.5rem + .2vw);
+//       // --content_space_b: calc(1rem + .2vw);
+//       // --content_space_c: calc(1.5rem + .2vw);
+//       // --area_space_b: calc(3rem + .2vw);
+//       // --area_space_c: calc(5rem + .2vw);
+//       --con_spa_s: calc(100vw / 144); // 9 16
+//       --con_spa_m: calc(100vw / 96); // 9 8
+//       --con_spa_l: calc(100vw / 48); // 9 4
+//       --con_spa_xl: calc(100vw / 24); // 9 2
+//       --con_spa_xxl: calc(100vw / 12); // 9 2
+//       // --f_s: calc(1rem + .3vw);
+//       // --f_s_s: calc(.825rem + .2vw);
+//       //--horizontal_space: calc((100vw - 1080px) * .5);
+//    }
+// }
+
+// @include breakpoint($X) {
+//    :root {
+//       //--horizontal_space: calc((100vw - 1360px) * .5);
+//    }
+// }
+
+// @include breakpoint($XL) {
+//    :root {
+//       // --top_space: 6rem;
+//       // --horizontal_space: calc((100vw - 1360px) * .5);
+//       // --f_s: calc(1rem + .4vw);
+//       // --f_s_s: calc(.825rem + .4vw);
+//       //--content_space_c: calc(1.5rem + .35vw);
+//    }
+// }
+
+// @include breakpoint($XXXL) {
+//    :root {
+//       --base: 20px;
+//       // --f_s: calc(1rem + .4vw);
+//       // --f_s_s: calc(.825rem + .3vw);
+//    }
+// }

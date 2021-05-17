@@ -9,6 +9,7 @@ header {
   top: 0;
   right: 0;
   display: flex;
+  padding: 1rem 1.5rem;
 }
 
 footer {
@@ -17,7 +18,14 @@ footer {
   bottom: 0;
   right: 0;
   display: flex;
-  & > :first-child {
+  padding: 1rem 1.5rem;
+  & > a {
+    margin-right: 0.5rem;
+  }
+  & > a:first-child {
     margin-right: auto;
+  }
+  & > a:last-child {
+    margin-right: 0;
   }
 }
