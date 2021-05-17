@@ -13,7 +13,7 @@ export default function sketch(p5) {
   const nutritionColor = '#fff';
   let props;
   let pixelWidth = 6;
-  let timer = 0;
+  // let timer = 0;
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
     props = theProps;
@@ -276,85 +276,62 @@ export default function sketch(p5) {
     const color_3 = color;
     const color_4 = p5.lerpColor(p5.color('white'), p5.color(color), 0.9);
     const color_5 = p5.lerpColor(p5.color('white'), p5.color(color), 0.8);
-    // const shadowColor = p5.lerpColor(p5.color('black'), p5.color(color), 0.8);
-    // const lightColor = p5.lerpColor(p5.color('white'), p5.color(color), 0.8);
 
     let maxblocks;
-    if( (radius * 2) % 2 == 0 ) {
+    if((radius*2)%2 === 0) {
       maxblocks = Math.ceil(radius - .5) * 2 + 1;
     } else {
       maxblocks = Math.ceil(radius) * 2;
     }
 
-    let matrix = [];
-    // for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
-    //   matrix[y] = [];
-    //   for( let x = -maxblocks / 2 + 1; x <= maxblocks / 2 - 1; x++ ) {
-    let i = 0, j = 0;
+    let matrix = [], i = 0;
     for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
       matrix[i] = [];
-      j=0;
       for( let x = -maxblocks / 2 + 1; x <= maxblocks / 2 - 1; x++ ) {                
-        
-        // let pixelColor = false;
         if(filled(x, y, radius)) {
           if(fatfilled(x, y, radius) && !(fatfilled(x + (x > 0 ? 1 : -1), y, radius) && fatfilled(x, y + (y > 0 ? 1 : -1), radius))) {
-            // pixelColor = borderColor;
             matrix[i].push(borderColor)
-          } else if(filled(x+2, y+2, 1 )) {
+          } else if(filled(x+2, y+2, 1)) {
             matrix[i].push(color_5);
-          } else if(filled(x+2, y+2, radius-7 )) {
+          } else if(filled(x+2, y+2, radius-7)) {
             p5.random()<0.3 ? matrix[i].push(color_5) : matrix[i].push(color_4);
-          } else if(filled(x+2, y+2, radius-6 )) {
-            // pixelColor = lightColor;
+          } else if(filled(x+2, y+2, radius-6)) {
             matrix[i].push(color_4)
-          } else if(filled(x+2, y+2, radius-4 )) {
-          // //   pixelColor = p5.random()<0.03 ? shadowColor : color;
+          } else if(filled(x+2, y+2, radius-4)) {
             p5.random()<0.3 ? matrix[i].push(color_4) : matrix[i].push(color_3);
-          } else if(filled(x+1, y+1, radius-3 )) {
-            // pixelColor = color;
+          } else if(filled(x+1, y+1, radius-3)) {
             matrix[i].push(color_3)
-          } else if(filled(x+1, y+1, radius-2 )) {
+          } else if(filled(x+1, y+1, radius-2)) {
             p5.random()<0.3 ? matrix[i].push(color_3) : matrix[i].push(color_2);
-          } else if(filled(x+1, y+1, radius-1 )) {
+          } else if(filled(x+1, y+1, radius-1)) {
             matrix[i].push(color_2)
           } else {
-            // pixelColor = shadowColor;
             matrix[i].push(color_1)
           }
         } else {
           matrix[i].push(null)
         }
-
-        // if(pixelColor) {
-        //   p5.fill(pixelColor);
-        //   p5.rect(xp, yp, pixelWidth);
-        // }
-        j++;
       }
       i++;
     }
-    // console.log(matrix)
+
     return matrix;
   }
 
   function drawPixelCircle(matrix, position) {
     p5.push();
-      // p5.circle(position.x, position.y, diameter);
-      p5.translate(position.x, position.y);
-      
-      for( let y = 0; y < matrix.length; y++ ) {
-        for( let x = 0; x < matrix.length; x++ ) {
-          if(matrix[y][x]) {
-            const xp = (x - matrix.length/2)*pixelWidth;
-            const yp = (y - matrix.length/2)*pixelWidth;
+    p5.translate(position.x, position.y);
+    for( let y = 0; y < matrix.length; y++ ) {
+      for( let x = 0; x < matrix.length; x++ ) {
+        if(matrix[y][x]) {
+          const xp = (x - matrix.length/2)*pixelWidth;
+          const yp = (y - matrix.length/2)*pixelWidth;
 
-            p5.fill(matrix[y][x]);
-            p5.rect(xp, yp, pixelWidth);
-          }
+          p5.fill(matrix[y][x]);
+          p5.rect(xp, yp, pixelWidth);
         }
       }
-
+    }
     p5.pop();
   }
 }

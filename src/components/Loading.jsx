@@ -6,6 +6,8 @@ const Loading = () => {
     gsap.to("#loading-wrapper", {
       opacity: 0,
       duration: 1,
+      delay: 0,
+      pointerEvents: 'none'
       // ease: Power4.easeOut,
     })
     // var loading_timeline = new TimelineMax();
@@ -27,7 +29,7 @@ const Loading = () => {
 
   return (
     <div id="loading-wrapper">
-
+      Marimo Rêverie
     </div>
   )
 }

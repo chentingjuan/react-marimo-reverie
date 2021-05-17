@@ -1,0 +1,23 @@
+// .TransitionMatchHOC {
+//   overflow-y: hidden;
+//   min-width: 100vw;
+//   min-height: 100vh;
+//   mask-image: url("../../images/transition_mask_2.png");
+//   mask-size: 2300% 100%;
+//   mask-position: 0 0;
+// }
+.TransitionMatchHOC {
+  overflow-x: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  // background-color: white;
+  opacity: 0;
+  // mask-image: url("../../images/transition_mask_3.png");
+  // mask-size: 3400% 100%;
+  // mask-position: 0 0;
+}
+
+
