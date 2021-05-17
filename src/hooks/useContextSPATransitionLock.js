@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import PropTypes from "prop-types";
 export const START_TRANSITION = "START_TRANSITION";
 export const END_TRANSITION = "END_TRANSITION";
@@ -26,7 +26,7 @@ function isTransitionDoneReducer(state, action) {
 }
 
 const ContextProvider = ({ children }) => {
-  const [isTransitionDone, dispatchTransitionType] = React.useReducer(
+  const [isTransitionDone, dispatchTransitionType] = useReducer(
     isTransitionDoneReducer,
     {
       isTransitionDone: true,

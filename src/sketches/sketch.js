@@ -28,7 +28,9 @@ export default function sketch(p5) {
     numOfMarimos = Math.floor(windowWidth*windowHeight/90000);
     numOfNutritions = Math.floor(windowWidth*windowHeight/90000);
 
-    setInterval(() => props.setTimer(props.timer+1), 1000);
+    setInterval(() => {
+      if(props.started) props.setTimer(props.timer+1)
+    }, 1000);
     
     marimos=[];
     for(let i=0; i<numOfMarimos; i++){
@@ -51,106 +53,107 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-    if(user.eateningTimer%10 < 5) p5.background('#DEF0F7');
-    else p5.background('black');
-    // p5.background('black');
+    if(props.started) {
+      if(user.eateningTimer%10 < 5) p5.background('#DEF0F7');
+      else p5.background('black');
 
-    if (p5.frameCount % 50 === 0) {
-      let position = getRandomPosition();
-      nutritions.push(new Nutrition({
-        position
-      }))
-    }
-    
-    // marimos...
-    marimos.forEach(m => {
-      m.update()
-      m.draw()
-      if(m.chewing) m.chewingTimer--;
-      if(m.chewingTimer<=0) {
-        m.chewing=false;
-        m.chewingTimer = chewingTime;
+      if (p5.frameCount % 50 === 0) {
+        let position = getRandomPosition();
+        nutritions.push(new Nutrition({
+          position
+        }))
       }
       
-      // hit the nutritions
-      nutritions.filter(n => !n.eaten).forEach(n => {
-        if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
-          // m.diameter+=pixelWidth;
-          m.toSize(m.diameter + pixelWidth);
-          n.eaten=true;
+      // marimos...
+      marimos.forEach(m => {
+        m.update()
+        m.draw()
+        if(m.chewing) m.chewingTimer--;
+        if(m.chewingTimer<=0) {
+          m.chewing=false;
+          m.chewingTimer = chewingTime;
         }
+        
+        // hit the nutritions
+        nutritions.filter(n => !n.eaten).forEach(n => {
+          if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
+            // m.diameter+=pixelWidth;
+            m.toSize(m.diameter + pixelWidth);
+            n.eaten=true;
+          }
+        })
+        
+        // hit user
+        if(user.diameter>pixelWidth*1) {
+          if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+            // m.diameter+=pixelWidth;
+            m.toSize(m.diameter + pixelWidth);
+            m.chewing = true;
+            user.eatening = true;
+            // user.diameter-=pixelWidth;
+            user.toSize(user.diameter - pixelWidth);
+          }
+        } else {
+          props.isGameOver();
+          // console.log("Game over!")
+          // alert("Game Over!");
+          // setup();
+        }
+        
+        // divide
+        if(m.diameter>pixelWidth*28) {
+          // sounds[0].play();
+          // m.diameter=pixelWidth*15;
+          m.toSize(pixelWidth*15);
+          // m.position.sub(10, 0);
+          marimos.push(new Marimo({
+            position: m.position.copy().add(20, 0),
+            vector: p5.createVector(0, 0),
+            diameter: pixelWidth*15,
+            color: m.color,
+          }));
+        }
+        
+        // add bubbles
+        // if (p5.random()<0.02){
+        //   let offset = p5.random(-m.radius, m.radius);
+        //   bubbles.push({
+        //     p: m.position.copy().add(offset),
+        //     v: p5.createVector(0, p5.random(-0.5,-5)),
+        //     r: p5.random(1,6),
+        //     opacity: p5.random(0.1, 500)
+        //   })
+        // }
       })
       
-      // hit user
-      if(user.diameter>pixelWidth*1) {
-        if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
-          // m.diameter+=pixelWidth;
-          m.toSize(m.diameter + pixelWidth);
-          m.chewing = true;
-          user.eatening = true;
-          // user.diameter-=pixelWidth;
-          user.toSize(user.diameter - pixelWidth);
+      // nutritions...
+      nutritions.filter(n => !n.eaten).forEach(n => {
+        n.draw()
+        
+        // hit user
+        if(user.position.dist(n.position)<(user.diameter+n.diameter)/2) {
+          user.toSize(user.diameter + pixelWidth);
+          n.eaten=true;
         }
-      } else {
-        props.isGameOver();
-        // console.log("Game over!")
-        // alert("Game Over!");
-        // setup();
-      }
+      });
       
-      // divide
-      if(m.diameter>pixelWidth*28) {
-        // sounds[0].play();
-        // m.diameter=pixelWidth*15;
-        m.toSize(pixelWidth*15);
-        // m.position.sub(10, 0);
-        marimos.push(new Marimo({
-          position: m.position.copy().add(20, 0),
-          vector: p5.createVector(0, 0),
-          diameter: pixelWidth*15,
-          color: m.color,
-        }));
-      }
+      // bubbles...
+      // bubbles.forEach(b=>{
+      //   drawPixelCircle(p5.color(255), p5.createVector(b.p.x + p5.noise(b.p.y/20)*b.r*2, b.p.y, 100), b.r);
+      //     b.p.y+=b.v.y;
+      // })
+      // bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
       
-      // add bubbles
-      // if (p5.random()<0.02){
-      //   let offset = p5.random(-m.radius, m.radius);
-      //   bubbles.push({
-      //     p: m.position.copy().add(offset),
-      //     v: p5.createVector(0, p5.random(-0.5,-5)),
-      //     r: p5.random(1,6),
-      //     opacity: p5.random(0.1, 500)
-      //   })
-      // }
-    })
-    
-    // nutritions...
-    nutritions.filter(n => !n.eaten).forEach(n => {
-      n.draw()
-      
-      // hit user
-      if(user.position.dist(n.position)<(user.diameter+n.diameter)/2) {
-        user.toSize(user.diameter + pixelWidth);
-        n.eaten=true;
+      user.update();
+      user.draw();
+      if(user.eatening) user.eateningTimer--;
+      if(user.eateningTimer<=0) {
+        user.eatening=false;
+        user.eateningTimer = eateningTime;
       }
-    });
-    
-    // bubbles...
-    // bubbles.forEach(b=>{
-    //   drawPixelCircle(p5.color(255), p5.createVector(b.p.x + p5.noise(b.p.y/20)*b.r*2, b.p.y, 100), b.r);
-    //     b.p.y+=b.v.y;
-    // })
-    // bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
-    
-    user.update();
-    user.draw();
-    if(user.eatening) user.eateningTimer--;
-    if(user.eateningTimer<=0) {
-      user.eatening=false;
-      user.eateningTimer = eateningTime;
-    }
 
-    props.setNumOfMarimos(marimos.length)
+      props.setNumOfMarimos(marimos.length)
+    }
   }
 
   class Marimo {

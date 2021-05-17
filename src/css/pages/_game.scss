@@ -1,8 +1,34 @@
-.data-box {
-  position: fixed;
-  left: 0;
-  top: 0;
-  padding: 4px;
-  font-size: 14px;
-  /* color: white; */
+section.game {
+  padding: 0;
+  
+  .data-box {
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 4px;
+    font-size: 14px;
+    /* color: white; */
+  }
+
+  .modal-wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .modal {
+      // position: absolute;
+      width: calc(100% - 2rem);
+      max-width: 500px;
+      padding: 2rem;
+      // margin: 2rem auto 0;
+      background-color: white;
+      border: solid 0.25rem black;
+    }
+  }
 }

@@ -28,3 +28,31 @@ img {
   width: 100%;
   height: auto;
 }
+
+.form-row {
+  margin: 0 0 2rem;
+}
+
+input {
+  display: block;
+  line-height: 2.5rem;
+  width: 100%;
+  border-radius: 0;
+  border: solid 4px black;
+}
+
+.title {
+  text-align: center;
+}
+
+.btn-wrapper {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.btn-hl {
+  font-family: var(--f_f_s);
+  letter-spacing: 2px;
+  font-size: 2.5rem;
+  line-height: 3rem;
+}
