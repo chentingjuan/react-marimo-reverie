@@ -1,25 +1,17 @@
 import React, { useEffect } from "react";
 import { gsap, Power4 } from "gsap";
-import Link from "../components/LinkWithTransitionLock";
+import Link from "../components/Link";
 
-const Home = () => {
-  return <>
-    <section>
-      <Link to="/game">
-        Play Game
-      </Link>
-      <Link to="/about">
-        About
-      </Link>
-      <Link to="/rules">
-        ?
-      </Link>
-      {/* <p>wefwef</p>
-      <p>wefwef</p>
-      wjef;ijq;wef
-      qwefqwe */}
-    </section>
-  </>;
-};
+import Header from "./../components/Header";
+import Footer from "./../components/Footer";
+
+const Home = () => pug`
+  section(className="section-page home")
+    Header
+
+    Link(to="/game") Play Game
+
+    Footer
+`;
 
 export default Home;

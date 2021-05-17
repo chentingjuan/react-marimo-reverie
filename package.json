@@ -85,7 +85,11 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:react-pug/all"
+    ],
+    "plugins": [
+      "react-pug"
     ]
   },
   "browserslist": {
@@ -102,6 +106,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-react-pug": "^7.0.1",
+    "eslint-plugin-react-pug": "^0.8.4",
     "gh-pages": "^3.1.0"
   },
   "jest": {

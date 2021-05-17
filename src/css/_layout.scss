@@ -1,7 +1,23 @@
-.header {
-
+section.section-page {
+  width: 100%;
+  min-height: 100vh;
 }
 
-.footer {
-  
+header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  display: flex;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  & > :first-child {
+    margin-right: auto;
+  }
 }

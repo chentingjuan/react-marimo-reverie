@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 export const START_TRANSITION = "START_TRANSITION";
 export const END_TRANSITION = "END_TRANSITION";
 
@@ -43,6 +43,10 @@ const ContextProvider = ({ children }) => {
       {children}
     </ContextStore.Provider>
   );
+};
+
+ContextProvider.propTypes = {
+  children: PropTypes.object.isRequired,
 };
 
 export default ContextProvider;

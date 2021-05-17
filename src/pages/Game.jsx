@@ -7,19 +7,17 @@ const GamePage = () => {
   const [numOfMarimos, setNumOfMarimos] = useState(0);
   const [timer, setTimer] = useState(null);
 
-  return <>
-    <div className="data-box">
-        <p>Number of Marimos: {numOfMarimos}</p>
-        <p>Timer: {timer}</p>
-      </div>  
-      <P5Wrapper
-        sketch={sketch} 
-        setNumOfMarimos={setNumOfMarimos}
-        timer={timer}
-        setTimer={setTimer}
-        // rotation={state.rotation} 
-      />
-  </>;
+  return pug`
+    div(className="data-box")
+      p Number of Marimos: #{numOfMarimos}
+      p Timer: #{timer}
+
+    P5Wrapper(
+      sketch=sketch 
+      setNumOfMarimos=setNumOfMarimos
+      timer=timer
+      setTimer=setTimer)
+  `;
 };
 
 export default GamePage;

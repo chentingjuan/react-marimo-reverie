@@ -1,5 +1,5 @@
 import React from "react";
-// import PropTypes, { arrayOf } from "prop-types";
+import PropTypes, { arrayOf } from "prop-types";
 import { Match } from "@reach/router";
 import { Transition } from "react-transition-group";
 import { gsap, Power3 } from "gsap";
@@ -71,9 +71,9 @@ const TransitionMatchHOC = ({ children, path }) => {
   );
 };
 
-// TransitionMatchHOC.propTypes = {
-//   children: PropTypes.object.isRequired,
-//   path: PropTypes.string.isRequired,
-// };
+TransitionMatchHOC.propTypes = {
+  children: PropTypes.object.isRequired,
+  path: PropTypes.string.isRequired,
+};
 
 export default TransitionMatchHOC;

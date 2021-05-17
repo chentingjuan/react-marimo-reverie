@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { gsap, Power4 } from "gsap";
 
-const Header = () => {
-  return <header>
-    
-  </header>;
-};
+import Link from "./../components/Link"
+
+const Header = () => pug`
+  header
+    Link(to="/") Marimo Reverie
+`;
 
 export default Header;

@@ -27,11 +27,9 @@ const Loading = () => {
     //   });
   });
 
-  return (
-    <div id="loading-wrapper">
-      Marimo Rêverie
-    </div>
-  )
+  return pug`
+    div(id="loading-wrapper") Marimo Rêverie
+  `
 }
 
 export default Loading;
