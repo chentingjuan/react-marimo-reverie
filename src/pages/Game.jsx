@@ -36,7 +36,7 @@ const GamePage = () => {
 
       P5Wrapper(
         sketch=sketch 
-        started=started
+        clickedStart=started
         setNumOfMarimos=setNumOfMarimos
         time=userPlayedTime
         setTime=setUserPlayedTime

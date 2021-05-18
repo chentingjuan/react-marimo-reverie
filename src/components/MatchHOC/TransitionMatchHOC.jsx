@@ -27,7 +27,7 @@ const TransitionMatchHOC = ({ children, path }) => {
             unmountOnExit
             addEndListener={(node, done) => {
               if (match !== null) {
-                console.log("in");
+                // console.log("in");
                 dispatchTransitionType({
                   type: START_TRANSITION,
                 });
@@ -45,7 +45,7 @@ const TransitionMatchHOC = ({ children, path }) => {
                   },
                 });
               } else {
-                console.log("out");
+                // console.log("out");
                 gsap.to(node, {
                   // top: "-5%",
                   opacity: 0,

@@ -7,18 +7,19 @@ export default function sketch(p5) {
   let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5;
   let user = null;
   let bubbles = [], sounds = [];
-  const chewingTime = 300, eateningTime = 20;
+  const chewingTime = 300, eateningTime = 25;
   const userColor = '#219EBC';
+  const userEasing = 0.01;
   // const nutritionColor = '#6B705C';
   const nutritionColor = '#fff';
   let props = {};
   let pixelWidth = 6;
-  let interval = null;
+  let playTimerInterval = null;
+  let countDownTimerInterval = null, countDownTimer = 3;
+  let started = false;
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
-    // console.log(props.started, theProps.started)
-    if(props.started !== theProps.started && theProps.started) {
-      // console.log('started!!!');
+    if(props.clickedStart !== theProps.clickedStart && theProps.clickedStart) {
       startGame();
     }
     props = theProps;
@@ -39,28 +40,41 @@ export default function sketch(p5) {
         color: colors[Math.floor(p5.random(colors.length))],
       }));
     }
+
+    user = new User();
   }
 
   const startGame = () => {
     console.log('starttedd')
+    countDownTimer=3;
 
-    nutritions=[];
-    for(let i=0; i<numOfNutritions; i++){
-      nutritions.push(new Nutrition({
-        position: getRandomPosition(),
-      }))
-    }
-    
-    user = new User();
+    countDownTimerInterval = setInterval(() => {
+      if(countDownTimer>1) {
+        countDownTimer--;
+      } else {
+        clearInterval(countDownTimerInterval);
 
-    interval = setInterval(() => props.setTime(props.time+1), 1000/60);
+        nutritions=[];
+        for(let i=0; i<numOfNutritions; i++){
+          nutritions.push(new Nutrition({
+            position: getRandomPosition(),
+          }))
+        }
+        
+        playTimerInterval = setInterval(() => {
+          props.setTime(props.time+1);
+        }, 1000/60);
+
+        started = true;
+      }
+    }, 1000);
   }
 
   p5.draw = () => {
-    if(user && user.eateningTimer%10 > 5) p5.background('black');
+    if(started && user.eateningTimer%10 > 5) p5.background('black');
     else p5.background('#DEF0F7');
 
-    if(user) {
+    if(started) {
       if (p5.frameCount % 50 === 0) {
         let position = getRandomPosition();
         nutritions.push(new Nutrition({
@@ -73,11 +87,11 @@ export default function sketch(p5) {
     marimos.forEach(m => {
       m.update()
       m.draw()
-      if(m.chewing) m.chewingTimer--;
-      if(m.chewingTimer<=0) {
-        m.chewing=false;
-        m.chewingTimer = chewingTime;
-      }
+      // if(m.chewing) m.chewingTimer--;
+      // if(m.chewingTimer<=0) {
+      //   m.chewing=false;
+      //   m.chewingTimer = chewingTime;
+      // }
       
       // hit the nutritions
       nutritions.filter(n => !n.eaten).forEach(n => {
@@ -88,16 +102,21 @@ export default function sketch(p5) {
       })
       
       // hit user
-      if(user) {
+      if(started) {
         if(user.diameter>pixelWidth*1) {
-          if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+          // if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+          if(m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
             m.toSize(m.diameter + pixelWidth);
-            m.chewing = true;
+            // m.chewing = true;
             user.eatening = true;
             user.toSize(user.diameter - pixelWidth);
+
+            let delta = m.position.copy().sub(user.position);
+            user.acceleration.sub(delta.mult(10))
+            m.vector.add(delta.mult(0.1).setMag(1))
           }
         } else {
-          clearInterval(interval);
+          clearInterval(playTimerInterval);
           props.isGameOver();
         }
       }
@@ -144,14 +163,19 @@ export default function sketch(p5) {
     // })
     // bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
     
-    if(user) {
-      user.update();
-      user.draw();
-      if(user.eatening) user.eateningTimer--;
-      if(user.eateningTimer<=0) {
-        user.eatening=false;
-        user.eateningTimer = eateningTime;
-      }
+    user.update();
+    user.draw();
+    if(user.eatening) user.eateningTimer--;
+    if(user.eateningTimer<=0) {
+      user.eatening=false;
+      user.eateningTimer = eateningTime;
+    }
+
+    if(!started) {
+      p5.push();
+        p5.textSize(100);
+        p5.text(countDownTimer, windowWidth/2, windowHeight/2);
+      p5.pop();
     }
   }
 
@@ -161,11 +185,10 @@ export default function sketch(p5) {
       this.vector = params.vector;
       this.diameter = params.diameter;
       this.color = params.color;
-      this.chewing = false;
-      this.chewingTimer = chewingTime;
+      // this.chewing = false;
+      // this.chewingTimer = chewingTime;
       this.dividing = false;
       // this.colliding=false;
-
       this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
@@ -213,40 +236,51 @@ export default function sketch(p5) {
       this.diameter = 4;
       this.color = nutritionColor;
       this.eaten=false;
-
       this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
       drawPixelCircle(this.matrix, this.position);
-      // drawPixelCircle(nutritionColor, this.position, this.diameter);
     }
   }
 
   class User {
     constructor(params) {
       this.position = p5.createVector(0, 0);
+      this.vector = p5.createVector(0, 0);
+      this.acceleration = p5.createVector(0, 0);
       this.diameter = pixelWidth*3;
       // this.eatenable = true;
       this.color = userColor;
       this.eatening = false;
       this.eateningTimer = eateningTime;
-      
       this.matrix = generateMatrix(this.color, this.diameter);
     }
     draw() {
-      // drawPixelCircle(userColor, this.position, this.diameter);
       drawPixelCircle(this.matrix, this.position);
     }
     update() {
-      const easing = 0.01;
-      
-      let targetX = p5.mouseX;
-      let dx = targetX - this.position.x;
-      this.position.x += dx * easing;
+      // console.log(this.vector)
+      // if(p5.abs(this.vector.x)>0.1 || p5.abs(this.vector.y)>0.1) {
+      //   this.position.add(this.vector);
+      //   this.vector.mult(0.9);
+      // } else {
+      //   let targetX = p5.mouseX;
+      //   let dx = targetX - this.position.x;
+      //   this.position.x += dx * userEasing;
 
-      let targetY = p5.mouseY;
-      let dy = targetY - this.position.y;
-      this.position.y += dy * easing;
+      //   let targetY = p5.mouseY;
+      //   let dy = targetY - this.position.y;
+      //   this.position.y += dy * userEasing;
+      // }
+      
+      this.vector.add(this.acceleration);
+      this.acceleration.mult(0.9);
+      
+      let dx = p5.mouseX - this.position.x;
+      let dy = p5.mouseY - this.position.y;
+      this.vector.add(dx, dy).mult(userEasing);
+
+      this.position.add(this.vector);
     }
     toSize(diameter) {
       this.diameter=diameter;
