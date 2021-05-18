@@ -35,10 +35,14 @@ img {
 
 input {
   display: block;
-  line-height: 2.5rem;
+  padding: 0.5rem 0.8rem 0.1rem;
+  line-height: 2rem;
+  letter-spacing: 1px;
   width: 100%;
   border-radius: 0;
   border: solid 4px black;
+  font-family: var(--f_f_s);
+  font-size: 1.5rem;
 }
 
 .title {
@@ -47,7 +51,7 @@ input {
 
 .btn-wrapper {
   text-align: center;
-  padding: 2rem 0;
+  padding: 1rem 0;
 }
 
 .btn-hl {

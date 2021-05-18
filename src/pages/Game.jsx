@@ -54,8 +54,9 @@ const GamePage = () => {
                 defaultValue=userName
                 onChange=e=>setUserName(e.target.value)
               )
-
-            a(className="btn-hl" onClick=()=>setStarted(true)) Ready
+            
+            div(className="btn-wrapper")
+              a(className="btn-hl" onClick=()=>setStarted(true)) Ready
   `;
 };
 
