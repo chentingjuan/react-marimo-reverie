@@ -2,8 +2,9 @@
   "name": "react-marimo-reverie",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://chentingjuan.github.io/react-marimo-reverie/",
+  "homepage": "http://chentingjuan.github.io/react-marimo-reverie",
   "_homepage": "./",
+  "basepath": "/react-marimo-reverie",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "0.4.3",
