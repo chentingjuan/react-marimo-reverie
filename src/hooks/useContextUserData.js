@@ -1,5 +1,6 @@
 import React, { createContext, useState } from 'react'
 import PropTypes from "prop-types";
+import colors from "./../constant/user-colors"
 
 const initState = {
   userName: '',
@@ -16,7 +17,7 @@ export const ContextStore = createContext(initState)
 
 const ContextProvider = ({ children }) => {
   const [userName, setUserName] = useState('');
-  const [userColor, setUserColor] = useState('');
+  const [userColor, setUserColor] = useState(colors[0]);
   const [userPlayedTime, setUserPlayedTime] = useState(-1);
   const [userPath, setUserPath] = useState([]);
 

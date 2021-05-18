@@ -8,7 +8,6 @@ export default function sketch(p5) {
   let user = null;
   let bubbles = [], sounds = [];
   const chewingTime = 300, eateningTime = 25;
-  const userColor = '#219EBC';
   const userEasing = 0.01;
   // const nutritionColor = '#6B705C';
   const nutritionColor = '#fff';
@@ -251,7 +250,7 @@ export default function sketch(p5) {
       this.acceleration = p5.createVector(0, 0);
       this.diameter = pixelWidth*3;
       // this.eatenable = true;
-      this.color = userColor;
+      this.color = 'black';
       this.eatening = false;
       this.eateningTimer = eateningTime;
       this.matrix = generateMatrix(this.color, this.diameter);
@@ -260,20 +259,11 @@ export default function sketch(p5) {
       drawPixelCircle(this.matrix, this.position);
     }
     update() {
-      // console.log(this.vector)
-      // if(p5.abs(this.vector.x)>0.1 || p5.abs(this.vector.y)>0.1) {
-      //   this.position.add(this.vector);
-      //   this.vector.mult(0.9);
-      // } else {
-      //   let targetX = p5.mouseX;
-      //   let dx = targetX - this.position.x;
-      //   this.position.x += dx * userEasing;
+      if(props.userColor !== this.color) {
+        this.color = props.userColor;
+        this.matrix = generateMatrix(this.color, this.diameter);
+      }
 
-      //   let targetY = p5.mouseY;
-      //   let dy = targetY - this.position.y;
-      //   this.position.y += dy * userEasing;
-      // }
-      
       this.vector.add(this.acceleration);
       this.acceleration.mult(0.9);
       
@@ -283,7 +273,6 @@ export default function sketch(p5) {
 
       this.position.add(this.vector);
 
-      // if(started && p5.frameCount%userTrackInterval===0) 
       if(started) props.setUserPath(preState => [...preState, { x: p5.mouseX, y: p5.mouseY }]);
     }
     toSize(diameter) {

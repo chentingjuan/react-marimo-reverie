@@ -3,6 +3,7 @@ import { gsap, Power4 } from "gsap";
 import P5Wrapper from "react-p5-wrapper";
 import sketch from "../sketches/sketch";
 import { navigate } from "@reach/router";
+import colors from "./../constant/user-colors"
 
 // import UserDataContext from "./../userDataContext";
 import { ContextStore } from "./../hooks/useContextUserData";
@@ -44,6 +45,7 @@ const GamePage = () => {
         time=userPlayedTime
         setTime=setUserPlayedTime
         setUserPath=setUserPath
+        userColor=userColor
         isGameOver=()=>{
           navigate(pjson.basepath+'/the-end')
         })
@@ -53,8 +55,13 @@ const GamePage = () => {
           div(className="modal")
             div(className="form-row")
               label Select a color
-              input
-            
+              div(className="select-items")
+                each color in colors
+                  div(
+                    style={'backgroundColor': color}
+                    className=(color===userColor)?"select-item active":"select-item"
+                    onClick=()=>setUserColor(color))
+
             div(className="form-row")
               label Enter your name
               input(
