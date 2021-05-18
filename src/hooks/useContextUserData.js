@@ -6,7 +6,7 @@ const initState = {
   setUserName: ()=>{},
   userColor: '',
   setUserColor: ()=>{},
-  userPlayedTime: '',
+  userPlayedTime: -1,
   setUserPlayedTime: ()=>{}
 }
 
@@ -15,7 +15,7 @@ export const ContextStore = createContext(initState)
 const ContextProvider = ({ children }) => {
   const [userName, setUserName] = useState('');
   const [userColor, setUserColor] = useState('');
-  const [userPlayedTime, setUserPlayedTime] = useState('');
+  const [userPlayedTime, setUserPlayedTime] = useState(-1);
 
   const userDataContext = {
     userName,

@@ -5,14 +5,18 @@ import { gsap, Power4 } from "gsap";
 import Link from "./../components/Link"
 
 import iconClock from "./../assets/icons/clock.svg";
+import { formattedTimer } from "./../utils";
 
 const Header = props => pug`
   header(className=props.mode)
-    Link(to="/") Marimo Reverie
+    Link(to="/" className="logo") 
+      span Marimo
+      span Rêverie
 
-    div
-      img(src=iconClock alt="")
-      span #{props.time}
+    if props.time !== -1
+      div(className="time")
+        img(src=iconClock alt="")
+        span #{formattedTimer(props.time)}
 `;
 
 Header.propTypes = {
@@ -22,7 +26,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
   mode: 'normal',
-  time: 0,
+  time: -1,
 }
 
 export default Header;

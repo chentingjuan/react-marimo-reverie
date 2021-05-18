@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
-import { Link } from "@reach/router";
+import { Link, useLocation } from "@reach/router";
 
 import { ContextStore } from "../../hooks/useContextSPATransitionLock.js";
 
@@ -10,11 +10,13 @@ const basepath = pjson.basepath
 
 const LinkWithTransitionLock = ({ children, to, ...restProps }) => {
   const { SPA: isTransitionDone } = React.useContext(ContextStore);
+  const location = useLocation();
 
   return (
     <Link
       {...restProps}
-      to={basepath+to}
+      to={ basepath + to } 
+      state={{ prevPath: location.pathname }}
       style={{ pointerEvents: isTransitionDone ? "default" : "none" }}
     >
       {children}

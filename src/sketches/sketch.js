@@ -53,7 +53,7 @@ export default function sketch(p5) {
     
     user = new User();
 
-    interval = setInterval(() => props.setTimer(props.timer+1), 1000);
+    interval = setInterval(() => props.setTime(props.time+1), 1000/60);
   }
 
   p5.draw = () => {

@@ -20,14 +20,11 @@ const TheEnd = () => {
 
   return pug`
     section(className="section-page the-end") 
-      Header(
-        displayLogo=false
-        time=userPlayedTime
-      )
-      
+      Header(time=userPlayedTime)
+
       div
         h1 Game Over
-        Link(to="/game" className="btn-hl") Try Again
+        Link(to="/game" className="btn btn-hl") Try Again
 
       Footer
   `;

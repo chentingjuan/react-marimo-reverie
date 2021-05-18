@@ -11,6 +11,31 @@ header {
   right: 0;
   display: flex;
   padding: 1rem 1.5rem;
+  align-items: flex-start;
+  .logo {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+    font-size: 1.5rem;
+    text-align: left;
+  }
+  .time {
+    display: flex;
+    img {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+header.game {
+  .logo {
+    opacity: 0;
+  }
+  .time {
+    img {
+      filter: invert(1);
+    }
+  }
 }
 
 footer {

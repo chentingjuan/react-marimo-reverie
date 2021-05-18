@@ -9,7 +9,7 @@ const Home = () => pug`
   section(className="section-page home")
     Header
 
-    Link(to="/game" className="btn-hl") Play Game
+    Link(to="/game" className="btn btn-hl") Play Game
 
     Footer
 `;

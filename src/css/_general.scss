@@ -54,6 +54,13 @@ input {
   padding: 1rem 0;
 }
 
+.btn {
+  transition: 0.1s ease;
+  &:hover {
+    color: nth($main-color, 1);
+  }
+}
+
 .btn-hl {
   font-family: var(--f_f_s);
   letter-spacing: 2px;
