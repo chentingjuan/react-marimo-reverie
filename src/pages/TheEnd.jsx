@@ -5,10 +5,10 @@ import Link from "./../components/Link"
 import Header from "./../components/Header";
 import Footer from "./../components/Footer";
 
-import UserDataContext from "./../userDataContext";
+import { ContextStore } from "./../hooks/useContextUserData";
 
 const TheEnd = () => {
-  const contextType = useContext(UserDataContext);
+  const contextType = useContext(ContextStore);
   const {
     userName,
     setUserName,
@@ -20,10 +20,11 @@ const TheEnd = () => {
 
   return pug`
     section(className="section-page the-end") 
-      Header
-
-      span #{userPlayedTime}
-
+      Header(
+        displayLogo=false
+        time=userPlayedTime
+      )
+      
       div
         h1 Game Over
         Link(to="/game" className="btn-hl") Try Again

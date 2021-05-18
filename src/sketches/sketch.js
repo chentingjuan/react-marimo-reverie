@@ -5,21 +5,23 @@ export default function sketch(p5) {
   const { windowWidth, windowHeight } = p5;
   let colors = "a2ca3d-81bc3f-5fad41-3e954b-2d8950-1c7c54-48af7e".split("-").map(a=>"#"+a);
   let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5;
-  let user;
+  let user = null;
   let bubbles = [], sounds = [];
   const chewingTime = 300, eateningTime = 20;
   const userColor = '#219EBC';
   // const nutritionColor = '#6B705C';
   const nutritionColor = '#fff';
-  let props;
+  let props = {};
   let pixelWidth = 6;
-  // let timer = 0;
+  let interval = null;
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
+    // console.log(props.started, theProps.started)
+    if(props.started !== theProps.started && theProps.started) {
+      // console.log('started!!!');
+      startGame();
+    }
     props = theProps;
-    // if (props.rotation) {
-    //   rotation = (props.rotation * Math.PI) / 180;
-    // }
   };
 
   p5.setup = () => {
@@ -28,10 +30,6 @@ export default function sketch(p5) {
     numOfMarimos = Math.floor(windowWidth*windowHeight/90000);
     numOfNutritions = Math.floor(windowWidth*windowHeight/90000);
 
-    setInterval(() => {
-      if(props.started) props.setTimer(props.timer+1)
-    }, 1000);
-    
     marimos=[];
     for(let i=0; i<numOfMarimos; i++){
       marimos.push(new Marimo({
@@ -41,7 +39,11 @@ export default function sketch(p5) {
         color: colors[Math.floor(p5.random(colors.length))],
       }));
     }
-    
+  }
+
+  const startGame = () => {
+    console.log('starttedd')
+
     nutritions=[];
     for(let i=0; i<numOfNutritions; i++){
       nutritions.push(new Nutrition({
@@ -50,11 +52,13 @@ export default function sketch(p5) {
     }
     
     user = new User();
+
+    interval = setInterval(() => props.setTimer(props.timer+1), 1000);
   }
 
   p5.draw = () => {
     if(props.started) {
-      if(user.eateningTimer%10 < 5) p5.background('#DEF0F7');
+      if(user && user.eateningTimer%10 < 5) p5.background('#DEF0F7');
       else p5.background('black');
 
       if (p5.frameCount % 50 === 0) {
@@ -77,7 +81,6 @@ export default function sketch(p5) {
         // hit the nutritions
         nutritions.filter(n => !n.eaten).forEach(n => {
           if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
-            // m.diameter+=pixelWidth;
             m.toSize(m.diameter + pixelWidth);
             n.eaten=true;
           }
@@ -86,26 +89,20 @@ export default function sketch(p5) {
         // hit user
         if(user.diameter>pixelWidth*1) {
           if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
-            // m.diameter+=pixelWidth;
             m.toSize(m.diameter + pixelWidth);
             m.chewing = true;
             user.eatening = true;
-            // user.diameter-=pixelWidth;
             user.toSize(user.diameter - pixelWidth);
           }
         } else {
+          clearInterval(interval);
           props.isGameOver();
-          // console.log("Game over!")
-          // alert("Game Over!");
-          // setup();
         }
         
         // divide
         if(m.diameter>pixelWidth*28) {
           // sounds[0].play();
-          // m.diameter=pixelWidth*15;
           m.toSize(pixelWidth*15);
-          // m.position.sub(10, 0);
           marimos.push(new Marimo({
             position: m.position.copy().add(20, 0),
             vector: p5.createVector(0, 0),
@@ -281,12 +278,7 @@ export default function sketch(p5) {
     const color_4 = p5.lerpColor(p5.color('white'), p5.color(color), 0.9);
     const color_5 = p5.lerpColor(p5.color('white'), p5.color(color), 0.8);
 
-    let maxblocks;
-    if((radius*2)%2 === 0) {
-      maxblocks = Math.ceil(radius - .5) * 2 + 1;
-    } else {
-      maxblocks = Math.ceil(radius) * 2;
-    }
+    let maxblocks = ((radius*2)%2 === 0) ? Math.ceil(radius - .5) * 2 + 1 : Math.ceil(radius) * 2;
 
     let matrix = [], i = 0;
     for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
@@ -322,7 +314,7 @@ export default function sketch(p5) {
     return matrix;
   }
 
-  function drawPixelCircle(matrix, position) {
+  const drawPixelCircle = (matrix, position) => {
     p5.push();
     p5.translate(position.x, position.y);
     for( let y = 0; y < matrix.length; y++ ) {

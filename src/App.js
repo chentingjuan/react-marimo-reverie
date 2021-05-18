@@ -5,36 +5,25 @@ import Loading from "./components/Loading.jsx";
 
 import routerConfig from "./route.conf.js";
 import TransitionMatchHOC from "./components/MatchHOC";
-import ContextProvider from "./hooks/useContextSPATransitionLock.js";
+import SPATransitionContextProvider from "./hooks/useContextSPATransitionLock.js";
 
-import UserDataContext from './userDataContext'
+import UserDataContextProvider from "./hooks/useContextUserData.js";
 
-function App() {
-  const [userName, setUserName] = useState('');
-  const [userColor, setUserColor] = useState('');
-  const [userPlayedTime, setUserPlayedTime] = useState('');
-  const UserDataContextProvider = UserDataContext.Provider;
-  const userDataContext = {
-    userName,
-    setUserName,
-    userColor,
-    setUserColor,
-    userPlayedTime,
-    setUserPlayedTime
-  };
+// import UserDataContext from './userDataContext'
 
+function App() {  
   return (
     <>
       <Loading />
 
-      <UserDataContextProvider value={userDataContext}>
-        <ContextProvider>
+      <UserDataContextProvider>
+        <SPATransitionContextProvider>
           {routerConfig.map(({ path, Component }, index) => 
             <TransitionMatchHOC key={index + path} path={path}>
               <Component />
             </TransitionMatchHOC>
           )}
-        </ContextProvider>
+        </SPATransitionContextProvider>
       </UserDataContextProvider>
     </>
   );

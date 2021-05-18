@@ -24,7 +24,7 @@ const LinkWithTransitionLock = ({ children, to, ...restProps }) => {
 
 LinkWithTransitionLock.propTypes = {
   children: PropTypes.object.isRequired,
-  to: PropTypes.string.isRequired,
+  to: PropTypes.object.isRequired,
 };
 
 export default LinkWithTransitionLock;

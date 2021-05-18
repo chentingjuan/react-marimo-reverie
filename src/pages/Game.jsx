@@ -4,14 +4,17 @@ import P5Wrapper from "react-p5-wrapper";
 import sketch from "../sketches/sketch";
 import { navigate } from "@reach/router";
 
-import UserDataContext from "./../userDataContext";
+// import UserDataContext from "./../userDataContext";
+import { ContextStore } from "./../hooks/useContextUserData";
+
+import pjson from "./../../package.json";
 
 const GamePage = () => {
   const [started, setStarted] = useState(false);
   const [numOfMarimos, setNumOfMarimos] = useState(0);
   const [timer, setTimer] = useState(null);
 
-  const contextType = useContext(UserDataContext);
+  const contextType = useContext(ContextStore);
   const {
     userName,
     setUserName,
@@ -35,7 +38,7 @@ const GamePage = () => {
         setTimer=setTimer
         isGameOver=()=>{
           setUserPlayedTime(timer)
-          navigate('/the-end')
+          navigate(pjson.basepath+'/the-end')
         })
 
       if !started
