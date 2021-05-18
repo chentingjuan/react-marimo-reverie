@@ -1,25 +1,26 @@
 {
   "files": {
-    "main.css": "/react-marimo-reverie/static/css/main.27c2b242.chunk.css",
-    "main.js": "/react-marimo-reverie/static/js/main.6b6f73fc.chunk.js",
-    "main.js.map": "/react-marimo-reverie/static/js/main.6b6f73fc.chunk.js.map",
+    "main.css": "/react-marimo-reverie/static/css/main.fc6c5b00.chunk.css",
+    "main.js": "/react-marimo-reverie/static/js/main.b68a9852.chunk.js",
+    "main.js.map": "/react-marimo-reverie/static/js/main.b68a9852.chunk.js.map",
     "runtime-main.js": "/react-marimo-reverie/static/js/runtime-main.9154bdf5.js",
     "runtime-main.js.map": "/react-marimo-reverie/static/js/runtime-main.9154bdf5.js.map",
-    "static/js/2.0908936b.chunk.js": "/react-marimo-reverie/static/js/2.0908936b.chunk.js",
-    "static/js/2.0908936b.chunk.js.map": "/react-marimo-reverie/static/js/2.0908936b.chunk.js.map",
+    "static/js/2.25a1843d.chunk.js": "/react-marimo-reverie/static/js/2.25a1843d.chunk.js",
+    "static/js/2.25a1843d.chunk.js.map": "/react-marimo-reverie/static/js/2.25a1843d.chunk.js.map",
     "static/js/3.7a43565f.chunk.js": "/react-marimo-reverie/static/js/3.7a43565f.chunk.js",
     "static/js/3.7a43565f.chunk.js.map": "/react-marimo-reverie/static/js/3.7a43565f.chunk.js.map",
     "index.html": "/react-marimo-reverie/index.html",
-    "static/css/main.27c2b242.chunk.css.map": "/react-marimo-reverie/static/css/main.27c2b242.chunk.css.map",
-    "static/js/2.0908936b.chunk.js.LICENSE.txt": "/react-marimo-reverie/static/js/2.0908936b.chunk.js.LICENSE.txt",
+    "static/css/main.fc6c5b00.chunk.css.map": "/react-marimo-reverie/static/css/main.fc6c5b00.chunk.css.map",
+    "static/js/2.25a1843d.chunk.js.LICENSE.txt": "/react-marimo-reverie/static/js/2.25a1843d.chunk.js.LICENSE.txt",
+    "static/media/clock.53cecabe.svg": "/react-marimo-reverie/static/media/clock.53cecabe.svg",
     "static/media/question-mark.9224245e.svg": "/react-marimo-reverie/static/media/question-mark.9224245e.svg",
     "static/media/real-picture.57f4429d.png": "/react-marimo-reverie/static/media/real-picture.57f4429d.png",
     "static/media/sound-on.e2a611b6.svg": "/react-marimo-reverie/static/media/sound-on.e2a611b6.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.9154bdf5.js",
-    "static/js/2.0908936b.chunk.js",
-    "static/css/main.27c2b242.chunk.css",
-    "static/js/main.6b6f73fc.chunk.js"
+    "static/js/2.25a1843d.chunk.js",
+    "static/css/main.fc6c5b00.chunk.css",
+    "static/js/main.b68a9852.chunk.js"
   ]
 }
