@@ -17,6 +17,7 @@ export default function sketch(p5) {
   let playTimerInterval = null;
   let countDownTimerInterval = null, countDownTimer = 3;
   let started = false;
+  // const userTrackInterval = 20;
 
   p5.myCustomRedrawAccordingToNewPropsHandler = (theProps) => {
     if(props.clickedStart !== theProps.clickedStart && theProps.clickedStart) {
@@ -281,6 +282,9 @@ export default function sketch(p5) {
       this.vector.add(dx, dy).mult(userEasing);
 
       this.position.add(this.vector);
+
+      // if(started && p5.frameCount%userTrackInterval===0) 
+      if(started) props.setUserPath(preState => [...preState, { x: p5.mouseX, y: p5.mouseY }]);
     }
     toSize(diameter) {
       this.diameter=diameter;

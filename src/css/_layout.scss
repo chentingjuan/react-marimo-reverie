@@ -12,6 +12,7 @@ header {
   display: flex;
   padding: 1rem 1.5rem;
   align-items: flex-start;
+  z-index: 1;
   .logo {
     display: flex;
     flex-direction: column;
@@ -45,6 +46,7 @@ footer {
   right: 0;
   display: flex;
   padding: 1rem 1.5rem;
+  z-index: 1;
   & > a {
     margin-right: 0.5rem;
   }

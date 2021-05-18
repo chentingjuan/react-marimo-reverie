@@ -23,11 +23,14 @@ const GamePage = () => {
     userColor,
     setUserColor,
     userPlayedTime,
-    setUserPlayedTime
+    setUserPlayedTime,
+    userPath,
+    setUserPath,
   } = contextType;
 
   useEffect(() => {
     setUserPlayedTime(0);
+    setUserPath([]);
   }, []);
 
   return pug`
@@ -40,6 +43,7 @@ const GamePage = () => {
         setNumOfMarimos=setNumOfMarimos
         time=userPlayedTime
         setTime=setUserPlayedTime
+        setUserPath=setUserPath
         isGameOver=()=>{
           navigate(pjson.basepath+'/the-end')
         })
