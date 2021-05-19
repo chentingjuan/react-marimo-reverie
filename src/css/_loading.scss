@@ -2,9 +2,34 @@
   position: fixed;
   left: 0; top: 0; right: 0; bottom: 0;
   background-color: rgba(0, 0, 0, 1);
-  color: white;
-  /* text-align: center; */
+  color: nth($main-color, 1);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 99;
+  font-size: 1.5rem;
+}
+
+.loader {
+  span {
+    display: inline-block;
+    vertical-align: top;
+    animation: loading 1.6s infinite;
+    @for $i from 1 through 14 {
+      &:nth-child(#{$i+1}) {
+        animation-delay: #{$i*.1}s;
+      }
+    }
+    &:nth-child(7) {
+      opacity: 0;
+    }
+  }
+}
+@keyframes loading {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
 }
