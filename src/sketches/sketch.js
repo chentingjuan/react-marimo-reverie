@@ -9,8 +9,8 @@ export default function sketch(p5) {
   let bubbles = [], sounds = [];
   const chewingTime = 300, eateningTime = 25;
   const userEasing = 0.01;
-  // const nutritionColor = '#6B705C';
-  const nutritionColor = '#fff';
+  const nutritionColor = '#6B705C';
+  // const nutritionColor = '#fff';
   let props = {};
   let pixelWidth = 6;
   let playTimerInterval = null;
@@ -137,15 +137,16 @@ export default function sketch(p5) {
       }
       
       // add bubbles
-      // if (p5.random()<0.02){
-      //   let offset = p5.random(-m.radius, m.radius);
-      //   bubbles.push({
-      //     p: m.position.copy().add(offset),
-      //     v: p5.createVector(0, p5.random(-0.5,-5)),
-      //     r: p5.random(1,6),
-      //     opacity: p5.random(0.1, 500)
-      //   })
-      // }
+      if (p5.random()<0.01){
+        const mRadius = m.diameter/2;
+        const offset = p5.random(-mRadius, mRadius);
+        bubbles.push(new Bubble({
+          position: m.position.copy().add(offset),
+          vector: p5.createVector(0, p5.random(-0.5,-5)),
+          diameter: p5.floor(p5.random(1,3))*pixelWidth,
+          opacity: p5.random(0.1, 1)
+        }))
+      }
     })
     
     // nutritions...
@@ -160,11 +161,11 @@ export default function sketch(p5) {
     });
     
     // bubbles...
-    // bubbles.forEach(b=>{
-    //   drawPixelCircle(p5.color(255), p5.createVector(b.p.x + p5.noise(b.p.y/20)*b.r*2, b.p.y, 100), b.r);
-    //     b.p.y+=b.v.y;
-    // })
-    // bubbles = bubbles.filter(b=>b.p.y>-windowHeight/2)
+    bubbles.forEach(b=>{
+      b.draw();
+      b.update();
+    })
+    bubbles = bubbles.filter(b=>b.position.y>-windowHeight/2)
     
     user.update();
     user.draw();
@@ -192,7 +193,7 @@ export default function sketch(p5) {
       // this.chewingTimer = chewingTime;
       this.dividing = false;
       // this.colliding=false;
-      this.matrix = generateMatrix(this.color, this.diameter);
+      this.matrix = generateBallMatrix(this.color, this.diameter);
     }
     draw() {
       drawPixelCircle(this.matrix, this.position);
@@ -229,7 +230,7 @@ export default function sketch(p5) {
     }
     toSize(diameter) {
       this.diameter=diameter;
-      this.matrix = generateMatrix(this.color, this.diameter);
+      this.matrix = generateBallMatrix(this.color, this.diameter);
     }
   }
 
@@ -237,12 +238,29 @@ export default function sketch(p5) {
     constructor(params) {
       this.position = params.position;
       this.diameter = 4;
-      this.color = params.color || nutritionColor;
+      this.color = nutritionColor;
       this.eaten=false;
-      this.matrix = generateMatrix(this.color, this.diameter);
+      this.matrix = generateCircleMatrix(this.color, this.diameter);
     }
     draw() {
       drawPixelCircle(this.matrix, this.position);
+    }
+  }
+
+  class Bubble {
+    constructor(params) {
+      this.position = params.position;
+      this.vector = params.vector;
+      this.diameter = params.diameter;
+      // this.color = params.color;
+      this.color = `rgba(255, 255, 255, ${params.opacity})`;
+      this.matrix = generateCircleMatrix(this.color, this.diameter);
+    }
+    draw() {
+      drawPixelCircle(this.matrix, this.position);
+    }
+    update() {
+      this.position.y+=this.vector.y;
     }
   }
 
@@ -256,7 +274,7 @@ export default function sketch(p5) {
       this.color = 'black';
       this.eatening = false;
       this.eateningTimer = eateningTime;
-      this.matrix = generateMatrix(this.color, this.diameter);
+      this.matrix = generateBallMatrix(this.color, this.diameter);
     }
     draw() {
       drawPixelCircle(this.matrix, this.position);
@@ -264,7 +282,7 @@ export default function sketch(p5) {
     update() {
       if(props.userColor !== this.color) {
         this.color = props.userColor;
-        this.matrix = generateMatrix(this.color, this.diameter);
+        this.matrix = generateBallMatrix(this.color, this.diameter);
       }
 
       this.vector.add(this.acceleration);
@@ -282,7 +300,7 @@ export default function sketch(p5) {
     }
     toSize(diameter) {
       this.diameter=diameter;
-      this.matrix = generateMatrix(this.color, this.diameter);
+      this.matrix = generateBallMatrix(this.color, this.diameter);
     }
   }
 
@@ -303,7 +321,7 @@ export default function sketch(p5) {
     );
   };
 
-  const generateMatrix = (color, diameter) => {
+  const generateBallMatrix = (color, diameter) => {
     const radius = Math.ceil(diameter/pixelWidth)/2;
     const borderColor = p5.lerpColor(p5.color('black'), p5.color(color), 0.6);
     const color_1 = p5.lerpColor(p5.color('black'), p5.color(color), 0.66);
@@ -338,6 +356,26 @@ export default function sketch(p5) {
           } else {
             matrix[i].push(color_1)
           }
+        } else {
+          matrix[i].push(null)
+        }
+      }
+      i++;
+    }
+
+    return matrix;
+  }
+
+  const generateCircleMatrix = (color, diameter) => {
+    const radius = Math.ceil(diameter/pixelWidth)/2;
+    let maxblocks = ((radius*2)%2 === 0) ? Math.ceil(radius - .5) * 2 + 1 : Math.ceil(radius) * 2;
+
+    let matrix = [], i = 0;
+    for( let y = -maxblocks / 2 + 1; y <= maxblocks / 2 - 1; y++ ) {
+      matrix[i] = [];
+      for( let x = -maxblocks / 2 + 1; x <= maxblocks / 2 - 1; x++ ) {                
+        if(filled(x, y, radius)) {
+          matrix[i].push(color)
         } else {
           matrix[i].push(null)
         }
