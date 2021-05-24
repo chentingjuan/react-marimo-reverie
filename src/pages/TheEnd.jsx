@@ -21,9 +21,9 @@ const TheEnd = () => {
     userPath
   } = contextType;
 
-  useEffect(() => {
-    console.log(userPath)
-  }, []);
+  // useEffect(() => {
+  //   console.log(userPath)
+  // }, []);
 
   return pug`
     section(className="section-page the-end") 

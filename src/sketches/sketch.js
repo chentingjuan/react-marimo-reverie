@@ -4,7 +4,7 @@
 export default function sketch(p5) {
   const { windowWidth, windowHeight } = p5;
   let colors = "a2ca3d-81bc3f-5fad41-3e954b-2d8950-1c7c54-48af7e".split("-").map(a=>"#"+a);
-  let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5;
+  let marimos = [], numOfMarimos = 10, nutritions = [], numOfNutritions = 5, freqOfNurition = 50;
   let user = null;
   let bubbles = [], sounds = [];
   const chewingTime = 300, eateningTime = 25;
@@ -28,8 +28,10 @@ export default function sketch(p5) {
   p5.setup = () => {
     p5.createCanvas(windowWidth, windowHeight);
     p5.noStroke();
-    numOfMarimos = Math.floor(windowWidth*windowHeight/90000);
-    numOfNutritions = Math.floor(windowWidth*windowHeight/90000);
+    const area = windowWidth*windowHeight;
+    numOfMarimos = Math.floor(area/90000);
+    numOfNutritions = Math.floor(area/90000);
+    freqOfNurition = Math.floor(40000000/area);
 
     marimos=[];
     for(let i=0; i<numOfMarimos; i++){
@@ -75,10 +77,11 @@ export default function sketch(p5) {
     else p5.background('#DEF0F7');
 
     if(started) {
-      if (p5.frameCount % 50 === 0) {
+      if (p5.frameCount % freqOfNurition === 0) {
         let position = getRandomPosition();
         nutritions.push(new Nutrition({
-          position
+          position,
+          // color: 'red'
         }))
       }
     }
@@ -234,7 +237,7 @@ export default function sketch(p5) {
     constructor(params) {
       this.position = params.position;
       this.diameter = 4;
-      this.color = nutritionColor;
+      this.color = params.color || nutritionColor;
       this.eaten=false;
       this.matrix = generateMatrix(this.color, this.diameter);
     }
@@ -266,10 +269,12 @@ export default function sketch(p5) {
 
       this.vector.add(this.acceleration);
       this.acceleration.mult(0.9);
-      
-      let dx = p5.mouseX - this.position.x;
-      let dy = p5.mouseY - this.position.y;
-      this.vector.add(dx, dy).mult(userEasing);
+    
+      const dx = p5.mouseX - this.position.x;
+      const dy = p5.mouseY - this.position.y;
+      let delta = p5.createVector(dx, dy);
+      // this.vector.add(dx, dy).mult(userEasing);
+      this.vector.add(delta.setMag(180)).mult(userEasing)
 
       this.position.add(this.vector);
 
