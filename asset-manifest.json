@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/react-marimo-reverie/static/css/main.04a16b15.chunk.css",
-    "main.js": "/react-marimo-reverie/static/js/main.d877c30c.chunk.js",
-    "main.js.map": "/react-marimo-reverie/static/js/main.d877c30c.chunk.js.map",
+    "main.js": "/react-marimo-reverie/static/js/main.57ff980d.chunk.js",
+    "main.js.map": "/react-marimo-reverie/static/js/main.57ff980d.chunk.js.map",
     "runtime-main.js": "/react-marimo-reverie/static/js/runtime-main.1e129710.js",
     "runtime-main.js.map": "/react-marimo-reverie/static/js/runtime-main.1e129710.js.map",
     "static/js/2.7507cb70.chunk.js": "/react-marimo-reverie/static/js/2.7507cb70.chunk.js",
@@ -21,6 +21,6 @@
     "static/js/runtime-main.1e129710.js",
     "static/js/2.7507cb70.chunk.js",
     "static/css/main.04a16b15.chunk.css",
-    "static/js/main.d877c30c.chunk.js"
+    "static/js/main.57ff980d.chunk.js"
   ]
 }
