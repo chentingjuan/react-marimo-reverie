@@ -32,7 +32,8 @@ const TheEnd = () => {
       if userPath.length
         P5Wrapper(
           sketch=sketch 
-          userPath=userPath)
+          userPath=userPath
+          userColor=userColor)
 
       div(className="content")
         h1 Game Over

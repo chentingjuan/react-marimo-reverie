@@ -33,11 +33,11 @@ export default function sketch(p5) {
 
   p5.draw = () => {
     // p5.background('black');
-    p5.fill('white');
+    p5.fill(props.userColor);
 
     // if(p5.frameCount%userTrackInterval===0 ) {
     if(index < props.userPath.length) {
-      p5.circle(props.userPath[index].x, props.userPath[index].y, 5);
+      p5.circle(props.userPath[index].x, props.userPath[index].y, 3);
       index++;
     }
   }
