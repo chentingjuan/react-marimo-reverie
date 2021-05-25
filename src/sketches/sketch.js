@@ -33,7 +33,7 @@ export default function sketch(p5) {
     numOfNutritions = Math.floor(area/90000);
     freqOfNurition = Math.floor(40000000/area);
 
-    marimos=[];
+    // create marimos
     for(let i=0; i<numOfMarimos; i++){
       marimos.push(new Marimo({
         position: getRandomPosition(),
@@ -56,7 +56,7 @@ export default function sketch(p5) {
       } else {
         clearInterval(countDownTimerInterval);
 
-        nutritions=[];
+        // create nutritions
         for(let i=0; i<numOfNutritions; i++){
           nutritions.push(new Nutrition({
             position: getRandomPosition(),
@@ -64,7 +64,7 @@ export default function sketch(p5) {
         }
         
         playTimerInterval = setInterval(() => {
-          props.setTime(props.time+1);
+          props.setTime(prevState => prevState+1);
         }, 1000/60);
 
         started = true;
@@ -77,28 +77,45 @@ export default function sketch(p5) {
     else p5.background('#DEF0F7');
 
     if(started) {
-      if (p5.frameCount % freqOfNurition === 0) {
+      if (p5.frameCount%freqOfNurition === 0) {
         let position = getRandomPosition();
         nutritions.push(new Nutrition({
           position,
-          // color: 'red'
         }))
       }
     }
     
     // marimos...
-    marimos.forEach(m => {
-      m.update()
-      m.draw()
+    marimos.forEach((m, i) => {
+      m.update();
+      m.draw();
       // if(m.chewing) m.chewingTimer--;
       // if(m.chewingTimer<=0) {
       //   m.chewing=false;
       //   m.chewingTimer = chewingTime;
       // }
+
+      // hit other marimos
+      marimos.forEach((mm, j) => {
+        if (i>j){
+          // if (mm.position.dist(m.position)<(mm.diameter+m.diameter)/2) {
+          //   //add sounds
+          //   // 
+          // }
+
+          // if (mm.position.dist(m.position)<(mm.diameter+m.diameter)/2.1) {
+          if(isCollide(mm.position, m.position, mm.diameter, m.diameter)) {
+            let delta = m.position.copy().sub(mm.position)
+            mm.vector.sub(delta.mult(0.2).setMag(1))
+            m.vector.add(delta.mult(0.2).setMag(1))
+          }
+        }
+      })
       
-      // hit the nutritions
+      // hit nutritions
       nutritions.filter(n => !n.eaten).forEach(n => {
-        if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
+        // if(m.position.dist(n.position)<(m.diameter+n.diameter)/2) {
+        if(isCollide(m.position, n.position, m.diameter, n.diameter)) {
           m.toSize(m.diameter + pixelWidth);
           n.eaten=true;
         }
@@ -108,7 +125,8 @@ export default function sketch(p5) {
       if(started) {
         if(user.diameter>pixelWidth*1) {
           // if(!m.chewing && m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
-          if(m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+          // if(m.position.dist(user.position)<(m.diameter+user.diameter)/2) {
+          if(isCollide(m.position, user.position, m.diameter, user.diameter)) {
             m.toSize(m.diameter + pixelWidth);
             // m.chewing = true;
             user.eatening = true;
@@ -154,7 +172,7 @@ export default function sketch(p5) {
       n.draw()
       
       // hit user
-      if(user.position.dist(n.position)<(user.diameter+n.diameter)/2) {
+      if(isCollide(user.position, n.position, user.diameter, n.diameter)) {
         user.toSize(user.diameter + pixelWidth);
         n.eaten=true;
       }
@@ -205,22 +223,6 @@ export default function sketch(p5) {
       // hit the wall
       if(this.position.x <= 0 || this.position.x > windowWidth) this.vector.x = -1.3*this.vector.x;
       if(this.position.y <= 0 || this.position.y > windowHeight) this.vector.y = -1.3*this.vector.y;
-      
-      // hit the marimos
-      marimos.forEach(m => {
-        if (this!==m){
-          if (this.position.dist(m.position)<(this.diameter+m.diameter)/2) {
-            //add sounds
-            // 
-          }
-
-          if (this.position.dist(m.position)<(this.diameter+m.diameter)/2.1) {
-            let delta = m.position.copy().sub(this.position)
-            this.vector.sub(delta.mult(0.2).setMag(1))
-            m.vector.add(delta.mult(0.2).setMag(1))
-          }
-        }
-      })
       
       const maxVector = 2.4;
       if(this.vector.x > maxVector) this.vector.x = maxVector;
@@ -305,6 +307,16 @@ export default function sketch(p5) {
   }
 
   const getRandomPosition = () => p5.createVector(p5.random(0, windowWidth), p5.random(0, windowHeight));
+
+  const isCollide = (aPosition, bPosition, aDiameter, bDiameter) => {
+    const maxPossibleDist = (aDiameter+bDiameter)/2;
+    if(p5.abs(aPosition.x-bPosition.x) <= maxPossibleDist && p5.abs(aPosition.y-bPosition.y) <= maxPossibleDist) {
+      if(aPosition.dist(bPosition)<maxPossibleDist) {
+        return true
+      }
+    }
+    return false;
+  }
 
   const distance = ( x, y ) => Math.sqrt((Math.pow(y, 2)) + Math.pow(x, 2));
   const filled = ( x, y, radius ) => distance(x, y) <= radius;
