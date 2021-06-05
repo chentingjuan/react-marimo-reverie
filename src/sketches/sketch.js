@@ -8,7 +8,7 @@ export default function sketch(p5) {
   let user = null;
   let bubbles = [], sounds = [];
   const chewingTime = 300, eateningTime = 25;
-  const userEasing = 0.01;
+  const userEasing = 0.03;
   const nutritionColor = '#6B705C';
   // const nutritionColor = '#fff';
   let props = {};
@@ -26,6 +26,7 @@ export default function sketch(p5) {
   };
 
   p5.setup = () => {
+    p5.frameRate(30);
     p5.createCanvas(windowWidth, windowHeight);
     p5.noStroke();
     const area = windowWidth*windowHeight;
@@ -133,7 +134,7 @@ export default function sketch(p5) {
             user.toSize(user.diameter - pixelWidth);
 
             let delta = m.position.copy().sub(user.position);
-            user.acceleration.sub(delta.mult(10))
+            user.acceleration.sub(delta.mult(6))
             m.vector.add(delta.mult(0.1).setMag(1))
           }
         } else {
@@ -143,15 +144,17 @@ export default function sketch(p5) {
       }
       
       // divide
-      if(m.diameter>pixelWidth*28) {
-        // sounds[0].play();
-        m.toSize(pixelWidth*15);
-        marimos.push(new Marimo({
+      if(m.diameter>=pixelWidth*32) {
+        // m.toSize(pixelWidth*15);
+        const newMarimo = new Marimo({
           position: m.position.copy().add(20, 0),
           vector: p5.createVector(0, 0),
-          diameter: pixelWidth*15,
+          diameter: 0,
           color: m.color,
-        }));
+        })
+        m.dividingCount = -8;
+        newMarimo.dividingCount = 8;
+        marimos.push(newMarimo);
       }
       
       // add bubbles
@@ -209,7 +212,7 @@ export default function sketch(p5) {
       this.color = params.color;
       // this.chewing = false;
       // this.chewingTimer = chewingTime;
-      this.dividing = false;
+      this.dividingCount = 0;
       // this.colliding=false;
       this.matrix = generateBallMatrix(this.color, this.diameter);
     }
@@ -219,6 +222,16 @@ export default function sketch(p5) {
     update() {
       this.position.add(this.vector)
       if(p5.frameCount%900===0) this.vector.mult(0.9)
+
+      if(this.dividingCount!==0) {
+        if(this.dividingCount>0) {
+          this.toSize(this.diameter+pixelWidth*2)
+          this.dividingCount--;
+        } else {
+          this.toSize(this.diameter-pixelWidth*2)
+          this.dividingCount++;
+        }
+      }
       
       // hit the wall
       if(this.position.x <= 0 || this.position.x > windowWidth) this.vector.x = -1.3*this.vector.x;
@@ -295,7 +308,6 @@ export default function sketch(p5) {
       let delta = p5.createVector(dx, dy);
       // this.vector.add(dx, dy).mult(userEasing);
       this.vector.add(delta.setMag(180)).mult(userEasing)
-
       this.position.add(this.vector);
 
       if(started) props.setUserPath(preState => [...preState, { x: p5.mouseX, y: p5.mouseY }]);
@@ -334,6 +346,7 @@ export default function sketch(p5) {
   };
 
   const generateBallMatrix = (color, diameter) => {
+    // if(!color) return false
     const radius = Math.ceil(diameter/pixelWidth)/2;
     const borderColor = p5.lerpColor(p5.color('black'), p5.color(color), 0.6);
     const color_1 = p5.lerpColor(p5.color('black'), p5.color(color), 0.66);
