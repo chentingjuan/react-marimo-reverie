@@ -305,10 +305,16 @@ export default function sketch(p5) {
     
       const dx = p5.mouseX - this.position.x;
       const dy = p5.mouseY - this.position.y;
-      let delta = p5.createVector(dx, dy);
-      // this.vector.add(dx, dy).mult(userEasing);
-      this.vector.add(delta.setMag(180)).mult(userEasing)
-      this.position.add(this.vector);
+      if(p5.abs(dx) < pixelWidth && p5.abs(dy) < pixelWidth && p5.abs(this.vector.x) < pixelWidth && p5.abs(this.vector.y) < pixelWidth) {
+        this.position.x = p5.mouseX;
+        this.position.y = p5.mouseY;
+      } else {
+        const delta = p5.createVector(dx, dy);
+        // this.vector.add(dx, dy).mult(userEasing);
+        this.vector.add(delta.setMag(180)).mult(userEasing);
+
+        this.position.add(this.vector);
+      }
 
       if(started) props.setUserPath(preState => [...preState, { x: p5.mouseX, y: p5.mouseY }]);
     }
